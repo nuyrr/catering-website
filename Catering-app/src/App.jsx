@@ -29,7 +29,7 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
           <Route path="/BookingPage" element={<BookingPage />} />
-          <Route path="/dashboard" element={<Dashboard />} /> {/* Dashboard route */}
+          <Route path="/Dashboard" element={<Dashboard />} /> {/* Dashboard route */}
           <Route path="/bookings" element={<Booking />} /> {/* Booking route */}
           <Route path="/queries" element={<Queries />} /> {/* Queries route */}
         </Routes>
