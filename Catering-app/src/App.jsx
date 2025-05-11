@@ -12,7 +12,7 @@ import Dashboard from './pages/Dashboard';  // Import Dashboard page
 import Booking from './pages/Booking';  // Import Booking page
 import Queries from './pages/Queries';  // Import Customer Queries page
 import BookingPage from './pages/Bookingpage'
-
+import ViewUsers from './pages/viewUsers';
 function App() {
   return (
     <Router>
@@ -32,6 +32,7 @@ function App() {
           <Route path="/Dashboard" element={<Dashboard />} /> {/* Dashboard route */}
           <Route path="/bookings" element={<Booking />} /> {/* Booking route */}
           <Route path="/queries" element={<Queries />} /> {/* Queries route */}
+          <Route path="/users" element={<ViewUsers />} />
         </Routes>
       </div>
     </Router>
@@ -41,7 +42,7 @@ function App() {
 // Conditional Navbar rendering based on the current path
 function ConditionalNavbar() {
   const location = useLocation(); // Get the current location (path)
-  const excludeNavbarPages = ['/signup', '/login','/dashboard','/bookings','/queries'];  // List of pages where Navbar is excluded
+  const excludeNavbarPages = ['/signup', '/login','/dashboard','/bookings','/queries','/users'];  // List of pages where Navbar is excluded
 
   // If the current route is in the excludeNavbarPages, return null (no Navbar)
   if (excludeNavbarPages.includes(location.pathname)) {

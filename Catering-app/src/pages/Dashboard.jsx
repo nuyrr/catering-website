@@ -1,12 +1,7 @@
-import React from 'react';
-import Sidebar from './Sidebar';
-import axios from 'axios';
-import {
-  FaDollarSign,
-  FaChartBar,
-  FaUsers,
-  FaEnvelope,
-} from 'react-icons/fa';
+import React, { useEffect, useState } from "react";
+import Sidebar from "./Sidebar";
+
+import { FaDollarSign, FaChartBar, FaUsers, FaEnvelope } from "react-icons/fa";
 import {
   BarChart,
   Bar,
@@ -18,43 +13,31 @@ import {
   Tooltip,
   ResponsiveContainer,
   Legend,
-} from 'recharts';
-useEffect(() => {
-  async function fetchStats() {
-    const res = await fetch('/api/admin/stats');
-    const data = await res.json();
-    setStats(data);
-  }
-
-  async function fetchCharts() {
-    const res = await fetch('/api/admin/chart-data');
-    const data = await res.json();
-    setMarketData(data.marketData);
-    setSalesData(data.salesData);
-  }
-
-  fetchStats();
-  fetchCharts();
-}, []);
-
-// Dummy data for charts
-const marketData = [
-  { name: 'Jan', sales: 2400, profit: 1400 },
-  { name: 'Feb', sales: 1398, profit: 980 },
-  { name: 'Mar', sales: 9800, profit: 3908 },
-  { name: 'Apr', sales: 3908, profit: 4800 },
-  { name: 'May', sales: 4800, profit: 3800 },
-  { name: 'Jun', sales: 3800, profit: 4300 },
-];
-
-const salesData = [
-  { name: 'Week 1', amount: 300 },
-  { name: 'Week 2', amount: 500 },
-  { name: 'Week 3', amount: 700 },
-  { name: 'Week 4', amount: 600 },
-];
+} from "recharts";
 
 const Dashboard = () => {
+  const [stats, setStats] = useState({});
+  const [marketData, setMarketData] = useState([]);
+  const [salesData, setSalesData] = useState([]);
+
+  useEffect(() => {
+    async function fetchStats() {
+      const res = await fetch("/api/admin/stats");
+      const data = await res.json();
+      setStats(data);
+    }
+
+    async function fetchCharts() {
+      const res = await fetch("/api/admin/chart-data");
+      const data = await res.json();
+      setMarketData(data.marketData);
+      setSalesData(data.salesData);
+    }
+
+    fetchStats();
+    fetchCharts();
+  }, []);
+
   return (
     <div className="flex bg-gray-100 min-h-screen">
       <Sidebar />
@@ -63,8 +46,9 @@ const Dashboard = () => {
       <div className="flex-1 px-6 py-4">
         {/* Top Header */}
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-gray-800">Dashboard Overview</h1>
-         
+          <h1 className="text-2xl font-bold text-gray-800">
+            Dashboard Overview
+          </h1>
         </div>
 
         {/* Stats Cards */}
@@ -114,7 +98,9 @@ const Dashboard = () => {
         <div className="grid grid-cols-3 gap-4">
           {/* Market Overview */}
           <div className="col-span-2 bg-white p-6 rounded-xl shadow">
-            <h3 className="text-lg font-semibold text-gray-700 mb-4">Market Overview</h3>
+            <h3 className="text-lg font-semibold text-gray-700 mb-4">
+              Market Overview
+            </h3>
             <ResponsiveContainer width="100%" height={250}>
               <BarChart data={marketData}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -130,7 +116,9 @@ const Dashboard = () => {
 
           {/* Activity List */}
           <div className="bg-white p-6 rounded-xl shadow">
-            <h3 className="text-lg font-semibold text-gray-700 mb-4">Today’s Activity</h3>
+            <h3 className="text-lg font-semibold text-gray-700 mb-4">
+              Today’s Activity
+            </h3>
             <ul className="text-sm text-gray-600 space-y-2">
               <li>📥 Incoming Transfer - Ethereum</li>
               <li>📄 Sales Report - Ethereum</li>
@@ -142,14 +130,21 @@ const Dashboard = () => {
 
         {/* Sales Analytics */}
         <div className="mt-6 bg-white p-6 rounded-xl shadow">
-          <h3 className="text-lg font-semibold text-gray-700 mb-4">Sales Analytics</h3>
+          <h3 className="text-lg font-semibold text-gray-700 mb-4">
+            Sales Analytics
+          </h3>
           <ResponsiveContainer width="100%" height={200}>
             <LineChart data={salesData}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="name" />
               <YAxis />
               <Tooltip />
-              <Line type="monotone" dataKey="amount" stroke="#00bcd4" strokeWidth={2} />
+              <Line
+                type="monotone"
+                dataKey="amount"
+                stroke="#00bcd4"
+                strokeWidth={2}
+              />
             </LineChart>
           </ResponsiveContainer>
         </div>

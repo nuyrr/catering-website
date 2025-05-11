@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
+
 function Login() {
   const [formData, setFormData] = useState({
     email: '',
@@ -17,25 +20,23 @@ function Login() {
     }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleLogin = async (event) => {
+    event.preventDefault();
+
+    const email = event.target.email.value;
+    const password = event.target.password.value;
+
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+      const res = await axios.post('http://localhost:5000/api/auth/login', {
+        email,
+        password,
       });
 
-      const data = await response.json();
-
-      if (response.ok) {
-        localStorage.setItem('token', data.token);
-        navigate('/dashboard');
-      } else {
-        alert(data.message || 'Login failed');
-      }
+      toast.success('Login successful!');
+      setTimeout(() => navigate('/dashboard'), 1000);
+      // You can redirect the user here if needed
     } catch (error) {
-      console.error('Login error:', error);
+      toast.error(error.response?.data?.message || 'Login failed. Please try again.');
     }
   };
 
@@ -50,7 +51,8 @@ function Login() {
       <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-xl">
         <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">Log In</h2>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleLogin} className="space-y-6">
+
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email Address</label>
             <div className="relative mt-2">
@@ -98,6 +100,7 @@ function Login() {
           </p>
         </div>
       </div>
+      <ToastContainer position="top-center" autoClose={3000} />
     </div>
   );
 }

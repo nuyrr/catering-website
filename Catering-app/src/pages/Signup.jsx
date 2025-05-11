@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 function Signup() {
   const [formData, setFormData] = useState({
     name: '',
@@ -16,30 +18,29 @@ function Signup() {
     }));
   };
 
+  const handleSubmit = async (event) => {
+    event.preventDefault();
   
+    const name = event.target.name.value;
+    const email = event.target.email.value;
+    const password = event.target.password.value;
   
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-      try {
-        const response = await fetch('/api/auth/signup', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData),
-        });
-    
-        const data = await response.json();
-    
-        if (response.ok) {
-          alert('Signup successful! Please log in.');
-        } else {
-          alert(data.message || 'Signup failed');
-        }
-      } catch (error) {
-        console.error('Signup error:', error);
-        alert('An error occurred during signup');
+    try {
+      const res = await axios.post('http://localhost:5000/api/auth/signup', {
+        name,
+        email,
+        password,
+      });
+      toast.success('User registered successfully!');
+      event.target.reset();
+      console.log('Signup success:', response.data);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data?.message || 'Signup failed.');
+      } else {
+        console.error('Unexpected error:', error.message);
       }
-    
-    
+    }
   };
 
   return (
@@ -123,6 +124,8 @@ function Signup() {
           </p>
         </div>
       </div>
+      {/* Toast container (should be included once in your app) */}
+      <ToastContainer position="top-center" autoClose={3000} />
     </div>
   );
 }

@@ -1,4 +1,6 @@
 
+
+// export default Sidebar;
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';  // Import SweetAlert2
@@ -21,13 +23,13 @@ const Sidebar = () => {
         // You can clear session or authentication data here
 
         // Example: Redirect user to the login page after logout
-        navigate('/');  // Redirect to login page
+        navigate('/');  // Redirect to home page
       }
     });
   };
 
   return (
-    <div className="bg-gray-900 text-white w-64 p-4 h-screen">
+    <div className="bg-gray-900 text-white w-64 p-4 h-screen sticky top-0">
       <h2 className="text-2xl font-bold mb-8">Admin Dashboard</h2>
       <ul className="space-y-4">
         <li>
@@ -40,6 +42,11 @@ const Sidebar = () => {
             Manage Bookings
           </Link>
         </li>
+        <li>
+        <Link to="/users" className="block px-4 py-2 hover:bg-gray-700 rounded">
+      View Users
+    </Link>
+    </li>
         <li>
           <Link to="/queries" className="block px-4 py-2 hover:bg-gray-700 rounded">
             Customer Queries

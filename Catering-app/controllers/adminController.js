@@ -1,42 +1,46 @@
-import Booking from '../models/Booking.js';
+import Reservation from '../models/Reservation.js';
+import Feedback from '../models/Feedback.js';
 import User from '../models/User.js';
 
-export const getDashboardStats = async (req, res) => {
+// Get all reservations
+export const getAllReservations = async (req, res) => {
   try {
-    const totalBookings = await Booking.countDocuments();
-    const totalUsers = await User.countDocuments();
-    
-    const bookings = await Booking.find();
-    const totalRevenue = bookings.reduce((acc, booking) => acc + (booking.price || 0), 0);
-
-    res.status(200).json({
-      totalBookings,
-      totalUsers,
-      totalRevenue,
-      averageIncome: totalRevenue / (bookings.length || 1)
-    });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    const reservations = await Reservation.find().populate('userId', 'name email');
+    res.status(200).json(reservations);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch reservations', details: error.message });
   }
 };
 
-// Optional dummy chart data
-export const getChartData = (req, res) => {
-  const marketData = [
-    { name: 'Jan', sales: 2400, profit: 1400 },
-    { name: 'Feb', sales: 1398, profit: 980 },
-    { name: 'Mar', sales: 9800, profit: 3908 },
-    { name: 'Apr', sales: 3908, profit: 4800 },
-    { name: 'May', sales: 4800, profit: 3800 },
-    { name: 'Jun', sales: 3800, profit: 4300 },
-  ];
+// Get all users with role 'user'
+export const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find({ role: 'user' }).select('-password');
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch users', details: error.message });
+  }
+};
 
-  const salesData = [
-    { name: 'Week 1', amount: 300 },
-    { name: 'Week 2', amount: 500 },
-    { name: 'Week 3', amount: 700 },
-    { name: 'Week 4', amount: 600 },
-  ];
+// Get all feedback
+export const getAllFeedback = async (req, res) => {
+  try {
+    const feedbacks = await Feedback.find().populate('userId', 'name email');
+    res.status(200).json(feedbacks);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch feedback', details: error.message });
+  }
+};
 
-  res.json({ marketData, salesData });
+// Delete a specific feedback by ID
+export const deleteFeedback = async (req, res) => {
+  try {
+    const deletedFeedback = await Feedback.findByIdAndDelete(req.params.id);
+    if (!deletedFeedback) {
+      return res.status(404).json({ error: 'Feedback not found' });
+    }
+    res.status(200).json({ message: 'Feedback deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete feedback', details: error.message });
+  }
 };
